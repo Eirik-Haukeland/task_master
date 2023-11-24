@@ -7,7 +7,10 @@ import (
 func main() {
 	say.Hello("")
 
-	say.StoreValue("userName", "Eirik")
+	err := say.StoreValue("userName", "Eirik")
+	if err != nil {
+		panic(err)
+	}
 
 	err, name := say.GetValue("userName")
 
