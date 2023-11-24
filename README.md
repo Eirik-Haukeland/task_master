@@ -3,6 +3,18 @@ Author: [Eirik Berget Haukeland](https://github.com/Eirik-Haukeland)
 
 task master is a web-based todo list application
 
+## starting the project
+
+first start the server:
+```shell
+docker compose up -d
+```
+
+then run this in the project root folder:
+```shell
+go run .
+```
+
 ## design
 
 the design is available for viewing on figma, but it is not open for collaboration at present
