@@ -10,8 +10,8 @@ import (
 
 func StoreValue(valueName string, valueData string) error {
 	var err error
-	if valueName == "" {
-		err = errors.New("valueName is not unique")
+	if strings.TrimSpace(valueName) == "" {
+		err = errors.New("valueName is empty")
 		return err
 	} else if strings.TrimSpace(valueData) == "" {
 		err = errors.New("valueData is empty")
@@ -32,8 +32,8 @@ func StoreValue(valueName string, valueData string) error {
 
 func GetValue(valueName string) (error, string) {
 	var err error
-	if valueName == "" {
-		err = errors.New("valueName is not unique")
+	if strings.TrimSpace(valueName) == "" {
+		err = errors.New("valueName is empty")
 		return err, ""
 	}
 
