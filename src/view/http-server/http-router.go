@@ -9,6 +9,7 @@ import (
 func Router() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/auth", handleAuth)
+	mux.HandleFunc("/api/user", handleAuth)
 	mux.HandleFunc("/api/todo", handleTodo)
 
 	return mux
@@ -44,13 +45,33 @@ func handleAuth(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("/api/auth got a POST requset\n")
 		io.WriteString(w, "POST request\n")
 
-	case http.MethodPut:
-		fmt.Printf("/api/auth got a PUT requset\n")
-		io.WriteString(w, "PUT request\n")
-
 	case http.MethodDelete:
 		fmt.Printf("/api/auth got a Delete requset\n")
 		io.WriteString(w, "Delete request\n")
+
+	default:
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+}
+
+func handleUser(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodPost:
+		fmt.Printf("/api/user got a POST requset\n")
+		io.WriteString(w, "POST request\n")
+
+	case http.MethodPut:
+		fmt.Printf("/api/user got a PUT requset\n")
+		io.WriteString(w, "PUT request\n")
+
+	case http.MethodDelete:
+		fmt.Printf("/api/user got a Delete requset\n")
+		io.WriteString(w, "Delete request\n")
+
+	case http.MethodGet:
+		fmt.Printf("/api/user got a get request")
+		io.WriteString(w, "Get request")
 
 	default:
 		w.WriteHeader(http.StatusBadRequest)
