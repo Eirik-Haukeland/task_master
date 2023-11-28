@@ -1,82 +1,45 @@
 package http_server
 
 import (
+	"encoding/json"
 	"fmt"
-	"io"
+	say "github.com/Eirik-Haukeland/task_master/src/model"
 	"net/http"
 )
 
 func Router() http.Handler {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/api/auth", handleAuth)
-	mux.HandleFunc("/api/user", handleAuth)
-	mux.HandleFunc("/api/todo", handleTodo)
+	mux.HandleFunc("/api/todo/create", createTodo)
 
 	return mux
 }
 
-func handleTodo(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case http.MethodPost:
-		fmt.Printf("/api/todo got a POST requset\n")
-		io.WriteString(w, "POST request\n")
-
-	case http.MethodPut:
-		fmt.Printf("/api/todo got a PUT requset\n")
-		io.WriteString(w, "PUT request\n")
-
-	case http.MethodDelete:
-		fmt.Printf("/api/todo got a Delete requset\n")
-		io.WriteString(w, "Delete request\n")
-
-	case http.MethodGet:
-		fmt.Printf("/api/todo got a get requset\n")
-		io.WriteString(w, "GET request\n")
-
-	default:
+func createTodo(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("/api/todo got a POST requset\n")
+	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-}
-
-func handleAuth(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case http.MethodPost:
-		fmt.Printf("/api/auth got a POST requset\n")
-		io.WriteString(w, "POST request\n")
-
-	case http.MethodDelete:
-		fmt.Printf("/api/auth got a Delete requset\n")
-		io.WriteString(w, "Delete request\n")
-
-	default:
+	if r.Body == nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-}
 
-func handleUser(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case http.MethodPost:
-		fmt.Printf("/api/user got a POST requset\n")
-		io.WriteString(w, "POST request\n")
+	newTodoItem := &newTodo{}
+	requestBuffer := []byte(r.Body) // todo: how to get the data formated so []byte() can access it
 
-	case http.MethodPut:
-		fmt.Printf("/api/user got a PUT requset\n")
-		io.WriteString(w, "PUT request\n")
+	err := json.Unmarshal(requestBuffer, newTodoItem)
 
-	case http.MethodDelete:
-		fmt.Printf("/api/user got a Delete requset\n")
-		io.WriteString(w, "Delete request\n")
-
-	case http.MethodGet:
-		fmt.Printf("/api/user got a get request")
-		io.WriteString(w, "Get request")
-
-	default:
-		w.WriteHeader(http.StatusBadRequest)
+	if err != nil {
+		fmt.Printf("error unmarshaling JSON: %v\n", err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	todoText := newTodoItem.Text
+
+	key := say.RandomKey()
+	say.StoreValue(key, todoText)
 }
 
 /*
