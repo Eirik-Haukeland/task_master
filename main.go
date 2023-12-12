@@ -2,6 +2,7 @@ package main
 
 import (
 	say "github.com/Eirik-Haukeland/task_master/src/model"
+	http_server "github.com/Eirik-Haukeland/task_master/src/view/http-server"
 )
 
 func main() {
@@ -20,4 +21,5 @@ func main() {
 		say.Hello(name)
 	}
 
+	http_server.HttpServer()
 }
